@@ -76,8 +76,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           </button>
           <div class="code-block">
-&lt;<span class="code-tag">script</span> <span class="code-attr">src</span>=<span class="code-string">"https://embed.interactor.ai/assets/index.js"</span>&gt;&lt;/<span class="code-tag">script</span>&gt;<br>
-&lt;<span class="code-tag">link</span> <span class="code-attr">rel</span>=<span class="code-string">"stylesheet"</span> <span class="code-attr">href</span>=<span class="code-string">"https://embed.interactor.ai/assets/index.css"</span> /&gt;
+&lt;<span class="code-tag">script</span> <span class="code-attr">type</span>=<span class="code-string">"module"</span> <span class="code-attr">crossorigin</span> <span class="code-attr">src</span>=<span class="code-string">"https://embed.interactor.ai/assets/index.js"</span> <span class="code-attr">defer</span>&gt;&lt;/<span class="code-tag">script</span>&gt;<br>
+&lt;<span class="code-tag">link</span> <span class="code-attr">rel</span>=<span class="code-string">"stylesheet"</span> <span class="code-attr">crossorigin</span> <span class="code-attr">href</span>=<span class="code-string">"https://embed.interactor.ai/assets/index.css"</span> /&gt;
           </div>
         </div>
       </div>
@@ -85,72 +85,81 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="step">
         <div class="step-number">2</div>
         <h3>Initialize Interactor</h3>
-        <p>Replace <code class="dynamic-id-display">YOUR_INTERACTOR_ID</code> with your Interactor ID:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" title="Copy code">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          </button>
-          <div class="code-block">
+        
+        <div style="margin-bottom: 2rem;">
+          <h4 style="margin-top: 0; margin-bottom: 0.8rem; font-size: 1rem; color: var(--accent-color);">Variant A: Mobile View (Pop Up)</h4>
+          <p>The standard way to embed Interactor as a mobile-optimized modal:</p>
+          <div class="code-wrapper">
+            <button class="copy-btn" title="Copy code">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <div class="code-block">
+&lt;<span class="code-tag">script</span>&gt;<br>
+&nbsp;&nbsp;<span class="code-keyword">window</span>.addEventListener(<span class="code-string">'load'</span>, () => {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">window</span>.interactor.initialize(<span class="code-string">'<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>'</span>)<br>
+&nbsp;&nbsp;})<br>
+&lt;/<span class="code-tag">script</span>&gt;
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="margin-top: 0; margin-bottom: 0.8rem; font-size: 1rem; color: var(--accent-color);">Variant B: Sidebar View</h4>
+          <p>Embed as a sidebar with callbacks to react to visibility changes:</p>
+          <div class="code-wrapper" style="margin-bottom: 1rem;">
+            <button class="copy-btn" title="Copy code">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <div class="code-block">
 &lt;<span class="code-tag">script</span>&gt;<br>
 &nbsp;&nbsp;<span class="code-keyword">window</span>.addEventListener(<span class="code-string">'load'</span>, () => {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">window</span>.interactor.initialize(<span class="code-string">'<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>'</span>, {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: <span class="code-string">'sidebar'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isOpen: <span class="code-keyword">false</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isFabVisible: <span class="code-keyword">true</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isOpen: <span class="code-keyword">true</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onOpen: ($chat) => {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Sidebar is open</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onClose: () => {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Sidebar is closed</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
 &nbsp;&nbsp;&nbsp;&nbsp;})<br>
 &nbsp;&nbsp;})<br>
 &lt;/<span class="code-tag">script</span>&gt;
+            </div>
           </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-number">3</div>
-        <h3>Optional: Use the concierge-style chat button</h3>
-        <p>You can choose a more animated concierge-style chat button.</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" title="Copy code">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          </button>
-          <div class="code-block">
-&lt;<span class="code-tag">script</span>&gt;<br>
-&nbsp;&nbsp;<span class="code-keyword">window</span>.addEventListener(<span class="code-string">'load'</span>, () => {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">window</span>.interactor.initialize(<span class="code-string">'<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>'</span>, {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type: <span class="code-string">'sidebar'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isOpen: <span class="code-keyword">false</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isFabVisible: <span class="code-keyword">true</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fabConfig: <span class="code-keyword">window</span>.interactor.fabPresets.concierge,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;})<br>
-&nbsp;&nbsp;})<br>
-&lt;/<span class="code-tag">script</span>&gt;
+        <h3>Advanced Control</h3>
+        
+        <div style="margin-bottom: 2rem;">
+          <h4 style="margin-top: 0; margin-bottom: 0.8rem; font-size: 1rem; color: var(--accent-color);">Custom Triggers</h4>
+          <p>Hide the default button and use your own:</p>
+          <div class="code-wrapper">
+            <button class="copy-btn" title="Copy code">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <div class="code-block">
+<span class="code-comment">// 1. Initialize with isFabVisible: false</span><br>
+<span class="code-keyword">window</span>.interactor.initialize(<span class="code-string">'<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>'</span>, { isFabVisible: <span class="code-keyword">false</span> });<br><br>
+<span class="code-comment">// 2. Open chat from your button handler</span><br>
+<span class="code-keyword">window</span>.interactor.modal.open();
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="step">
-        <div class="step-number">4</div>
-        <h3>Open chat from your own button (optional)</h3>
-        <p>You can open Interactor from any custom button on your site:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" title="Copy code">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          </button>
-          <div class="code-block">
-&lt;<span class="code-tag">button</span> <span class="code-attr">onclick</span>=<span class="code-string">"window.interactor.modal.open()"</span>&gt;Chat Now&lt;/<span class="code-tag">button</span>&gt;
-          </div>
-        </div>
-      </div>
-      
-      <div class="step">
-        <div class="step-number">5</div>
-        <h3>Send a message into Interactor</h3>
-        <p>You can send a message into the chat programmatically from your site:</p>
-        <div class="code-wrapper">
-          <button class="copy-btn" title="Copy code">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          </button>
-          <div class="code-block">
-<span class="code-keyword">window</span>.interactor.message.send(<span class="code-string">"I'd like to schedule a call"</span>)
+        <div>
+          <h4 style="margin-top: 0; margin-bottom: 0.8rem; font-size: 1rem; color: var(--accent-color);">Send background messages</h4>
+          <p>Interact with the chat programmatically without necessarily opening it:</p>
+          <div class="code-wrapper">
+            <button class="copy-btn" title="Copy code">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <div class="code-block">
+<span class="code-keyword">window</span>.interactor.message.send(<span class="code-string">'Added product to cart'</span>, { shouldOpenChat: <span class="code-keyword">false</span> });
+            </div>
           </div>
         </div>
       </div>
