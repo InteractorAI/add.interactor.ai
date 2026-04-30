@@ -29,18 +29,24 @@ const checkIcon = `
 `
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light mode">
+    <span id="theme-toggle-label">Light</span>
+  </button>
+
   <main class="page-shell">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow">Interactor setup for agents</p>
-        <h1 id="hero-title">Point your developer agent at one file.</h1>
+        <div class="brand-lockup" aria-label="Interactor">
+          <img src="/favicon.svg" alt="" />
+          <span>Interactor</span>
+        </div>
+        <h1 id="hero-title">Add Interactor <span class="heading-nowrap">to your site.</span></h1>
         <p class="hero-subtitle">
-          The skill file gives Codex, Cursor, Claude Code, and other agents the exact install path for adding Interactor to a site.
+          Use the agent-ready skill file or copy the embed snippets below to install the Interactor chat widget.
         </p>
       </div>
 
-      <div class="terminal-panel" aria-label="Get started">
-        <div class="terminal-title">Get started</div>
+      <div class="terminal-panel" aria-label="Agent setup">
         <div class="terminal-body">
           <p>Tell your agent to:</p>
           <div class="prompt-card">
@@ -118,8 +124,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <p>Add these to your HTML head or app shell.</p>
             <div class="code-wrapper">
               <button class="icon-copy copy-code" type="button" aria-label="Copy asset snippet">${copyIcon}</button>
-              <pre><code>&lt;script type="module" crossorigin src="https://embed.interactor.ai/assets/index.js" defer&gt;&lt;/script&gt;
-&lt;link rel="stylesheet" crossorigin href="https://embed.interactor.ai/assets/index.css" /&gt;</code></pre>
+              <pre><code>&lt;<span class="code-tag">script</span> <span class="code-attr">type</span>=<span class="code-string">"module"</span> <span class="code-attr">crossorigin</span> <span class="code-attr">src</span>=<span class="code-string">"https://embed.interactor.ai/assets/index.js"</span> <span class="code-attr">defer</span>&gt;&lt;/<span class="code-tag">script</span>&gt;
+&lt;<span class="code-tag">link</span> <span class="code-attr">rel</span>=<span class="code-string">"stylesheet"</span> <span class="code-attr">crossorigin</span> <span class="code-attr">href</span>=<span class="code-string">"https://embed.interactor.ai/assets/index.css"</span> /&gt;</code></pre>
             </div>
           </div>
         </div>
@@ -131,15 +137,15 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <p>Use the ID for the Interactor you want to embed.</p>
             <div class="code-wrapper">
               <button class="icon-copy copy-code" type="button" aria-label="Copy initialization snippet">${copyIcon}</button>
-              <pre><code>&lt;script&gt;
-  window.addEventListener('load', () =&gt; {
-    window.interactor.initialize('<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>', {
-      type: 'sidebar',
-      isOpen: false,
-      isFabVisible: true
+              <pre><code>&lt;<span class="code-tag">script</span>&gt;
+  <span class="code-keyword">window</span>.addEventListener(<span class="code-string">'load'</span>, () =&gt; {
+    <span class="code-keyword">window</span>.interactor.initialize(<span class="code-string">'<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>'</span>, {
+      <span class="code-property">type</span>: <span class="code-string">'sidebar'</span>,
+      <span class="code-property">isOpen</span>: <span class="code-keyword">false</span>,
+      <span class="code-property">isFabVisible</span>: <span class="code-keyword">true</span>
     })
   })
-&lt;/script&gt;</code></pre>
+&lt;/<span class="code-tag">script</span>&gt;</code></pre>
             </div>
           </div>
         </div>
@@ -147,16 +153,33 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <div class="step">
           <div class="step-number">3</div>
           <div>
-            <h3>Use custom triggers</h3>
-            <p>Hide the default button when your own UI should open Interactor.</p>
+            <h3>Advanced control</h3>
+            <p>Use your own button or send context into the chat from the page.</p>
+
+            <h4>Custom button</h4>
+            <p>Hide the default Interactor button when you want to use your own.</p>
             <div class="code-wrapper">
-              <button class="icon-copy copy-code" type="button" aria-label="Copy trigger snippet">${copyIcon}</button>
-              <pre><code>window.interactor.initialize('<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>', {
-  isFabVisible: false
+              <button class="icon-copy copy-code" type="button" aria-label="Copy custom button snippet">${copyIcon}</button>
+              <pre><code><span class="code-comment">// 1. Initialize without the default floating button</span>
+<span class="code-keyword">window</span>.interactor.initialize(<span class="code-string">'<span class="dynamic-id-code">${DEFAULT_INTERACTOR_ID}</span>'</span>, {
+  <span class="code-property">isFabVisible</span>: <span class="code-keyword">false</span>
 })
 
-window.interactor.modal.open()
-window.interactor.message.send('I would like help with this page')</code></pre>
+<span class="code-comment">// 2. Open chat from your own button handler</span>
+<span class="code-keyword">window</span>.interactor.modal.open()</code></pre>
+            </div>
+
+            <h4>Send messages</h4>
+            <p>Send page events or user intent into the conversation.</p>
+            <div class="code-wrapper">
+              <button class="icon-copy copy-code" type="button" aria-label="Copy message snippet">${copyIcon}</button>
+              <pre><code><span class="code-comment">// Opens the chat and sends a message</span>
+<span class="code-keyword">window</span>.interactor.message.send(<span class="code-string">'I would like help with this page'</span>)
+
+<span class="code-comment">// Send background context without opening chat</span>
+<span class="code-keyword">window</span>.interactor.message.send(<span class="code-string">'Added product to cart'</span>, {
+  <span class="code-property">shouldOpenChat</span>: <span class="code-keyword">false</span>
+})</code></pre>
             </div>
           </div>
         </div>
@@ -197,6 +220,23 @@ const updateUrl = (id: string, type: string, fabStyle: string, reload = false) =
   window.history.replaceState({}, '', url)
 }
 
+const getCurrentTheme = () => document.documentElement.classList.contains('light-mode') ? 'light' : 'dark'
+
+const updateThemeToggle = () => {
+  const label = document.getElementById('theme-toggle-label')
+  const toggle = document.getElementById('theme-toggle')
+  const isLight = getCurrentTheme() === 'light'
+
+  if (label) label.textContent = isLight ? 'Dark' : 'Light'
+  if (toggle) toggle.setAttribute('aria-label', `Switch to ${isLight ? 'dark' : 'light'} mode`)
+}
+
+const applyTheme = (theme: 'light' | 'dark') => {
+  document.documentElement.classList.toggle('light-mode', theme === 'light')
+  localStorage.setItem('theme', theme)
+  updateThemeToggle()
+}
+
 const initInteractor = (id: string, type: 'sidebar' | 'mobile', fabStyle: 'concierge' | 'simple') => {
   updateCodeSnippets(id)
 
@@ -207,7 +247,7 @@ const initInteractor = (id: string, type: 'sidebar' | 'mobile', fabStyle: 'conci
 
   const config: Record<string, unknown> = {
     type,
-    theme: 'dark',
+    theme: getCurrentTheme(),
     isOpen: false,
     isFabVisible: true,
     onOpen: (layout: unknown) => console.log('Chat opened', layout),
@@ -289,6 +329,7 @@ const handleRadioChange = () => {
 
 window.addEventListener('load', () => {
   const { id, type, fabStyle, success } = getParams()
+  applyTheme(localStorage.getItem('theme') === 'light' ? 'light' : 'dark')
 
   const idInput = document.getElementById('interactor-id') as HTMLInputElement
   const typeRadio = document.querySelector<HTMLInputElement>(`input[name="view-type"][value="${type}"]`)
@@ -311,6 +352,14 @@ window.addEventListener('load', () => {
 
     window.setTimeout(() => setButton.classList.remove('success'), 1400)
   }
+})
+
+document.getElementById('theme-toggle')?.addEventListener('click', () => {
+  const nextTheme = getCurrentTheme() === 'light' ? 'dark' : 'light'
+  const { id, type, fabStyle } = getCurrentFormState()
+
+  applyTheme(nextTheme)
+  initInteractor(id, type, fabStyle)
 })
 
 document.getElementById('set-btn')?.addEventListener('click', handleSet)
