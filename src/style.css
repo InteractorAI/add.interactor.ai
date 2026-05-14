@@ -71,7 +71,9 @@ body {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -275,6 +277,7 @@ html.light-mode .icon-copy.copied {
 }
 
 .setup-panel,
+.form-demo-panel,
 .docs-card {
   border: 1px solid var(--panel-border);
   border-radius: 8px;
@@ -286,6 +289,7 @@ html.light-mode .icon-copy.copied {
 }
 
 .setup-panel h2,
+.form-demo-panel h2,
 .docs-card h2 {
   margin-bottom: 8px;
   color: var(--text);
@@ -294,6 +298,7 @@ html.light-mode .icon-copy.copied {
 }
 
 .setup-panel p,
+.form-demo-header p,
 .docs-header p,
 .step p,
 .skill-panel li {
@@ -312,18 +317,63 @@ html.light-mode .icon-copy.copied {
   position: relative;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="email"],
+input[type="url"],
+select,
+textarea {
   width: 100%;
-  min-height: 48px;
   border: 1px solid var(--panel-border);
   border-radius: 8px;
   background: var(--field-bg);
   color: var(--text);
-  padding: 0 82px 0 14px;
+  padding: 0 14px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+select {
+  min-height: 48px;
+}
+
+#interactor-id {
+  padding-right: 82px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-input[type="text"]:focus {
+input[type="email"],
+input[type="url"],
+select,
+textarea {
+  font-size: 0.96rem;
+}
+
+select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% + 1px),
+    calc(100% - 13px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 38px;
+}
+
+textarea {
+  min-height: 116px;
+  padding-top: 13px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+select:focus,
+textarea:focus {
   outline: 2px solid rgba(160, 255, 41, 0.46);
   outline-offset: 2px;
 }
@@ -444,6 +494,133 @@ input[type="text"]:focus {
 
 .skill-panel code {
   color: var(--text);
+}
+
+.form-demo-panel {
+  margin: 0 0 28px;
+  overflow: hidden;
+}
+
+.form-demo-header {
+  border-bottom: 1px solid var(--panel-border);
+  padding: 24px;
+}
+
+.form-demo-header p {
+  margin-bottom: 0;
+}
+
+.form-demo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(300px, 0.96fr);
+  gap: 22px;
+  padding: 24px;
+}
+
+.handoff-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-field {
+  min-width: 0;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.form-field-wide,
+.form-actions {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 46px;
+}
+
+.form-actions button {
+  display: inline-flex;
+  min-width: 180px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: var(--brand-green);
+  color: #00160b;
+  cursor: pointer;
+  font-weight: 850;
+  line-height: 1;
+  padding: 0 16px;
+}
+
+.form-actions button:hover {
+  filter: brightness(0.96);
+}
+
+#form-demo-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+#form-demo-status.success {
+  color: var(--brand-green);
+}
+
+html.light-mode #form-demo-status.success {
+  color: #1f3c00;
+}
+
+#form-demo-status.error {
+  color: #ff8c77;
+}
+
+.handoff-preview {
+  min-width: 0;
+  border: 1px solid rgba(160, 255, 41, 0.14);
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--code-text);
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(160, 255, 41, 0.14);
+  padding: 15px 16px;
+}
+
+.preview-header h3 {
+  margin: 0;
+  font-size: 0.94rem;
+}
+
+.preview-header span {
+  color: var(--code-tag);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.handoff-preview pre {
+  overflow-x: auto;
+  margin: 0;
+  padding: 16px;
+  color: var(--code-text);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
 }
 
 .docs-card {
@@ -575,7 +752,8 @@ input[type="text"]:focus {
   }
 
   .hero,
-  .setup-grid {
+  .setup-grid,
+  .form-demo-layout {
     grid-template-columns: 1fr;
   }
 
@@ -593,6 +771,8 @@ input[type="text"]:focus {
 
   .terminal-body,
   .setup-panel,
+  .form-demo-header,
+  .form-demo-layout,
   .docs-header,
   .docs-content {
     padding: 18px;
@@ -612,8 +792,18 @@ input[type="text"]:focus {
     grid-template-columns: 1fr;
   }
 
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .handoff-form {
+    grid-template-columns: 1fr;
+  }
+
   .action-row button,
-  .text-link {
+  .text-link,
+  .form-actions button {
     width: 100%;
   }
 }

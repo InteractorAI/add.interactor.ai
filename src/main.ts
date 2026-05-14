@@ -42,7 +42,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         </div>
         <h1 id="hero-title">Add Interactor <span class="heading-nowrap">to your site.</span></h1>
         <p class="hero-subtitle">
-          Use the agent-ready skill file or copy the embed snippets below to install the Interactor chat widget.
+          Use the agent-ready skill file, test the widget, or pass a traditional form into Interactor.
         </p>
       </div>
 
@@ -104,10 +104,63 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <li>Embed script and stylesheet URLs</li>
           <li>Initialization patterns for sidebar and pop-up views</li>
           <li>Custom trigger examples using <code>window.interactor.modal.open()</code></li>
+          <li>Traditional form handoff examples using <code>window.interactor.message.send()</code></li>
           <li>A short implementation checklist for agents</li>
         </ul>
         <a class="text-link" href="/skill.md">Open skill.md</a>
       </article>
+    </section>
+
+    <section class="form-demo-panel" aria-labelledby="form-demo-title">
+      <div class="form-demo-header">
+        <div>
+          <h2 id="form-demo-title">Traditional form handoff</h2>
+          <p>A standard field-based form can hand off to Interactor for instant service.</p>
+        </div>
+      </div>
+
+      <div class="form-demo-layout">
+        <form id="demo-lead-form" class="handoff-form">
+          <div class="form-field">
+            <label for="lead-name">Name</label>
+            <input type="text" id="lead-name" name="name" value="Jordan Lee" autocomplete="name" required>
+          </div>
+
+          <div class="form-field">
+            <label for="lead-email">Email</label>
+            <input type="email" id="lead-email" name="email" value="jordan@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="form-field form-field-wide">
+            <label for="lead-request">Request type</label>
+            <select id="lead-request" name="requestType">
+              <option selected>General question</option>
+              <option>Support request</option>
+              <option>Sales inquiry</option>
+              <option>Return request</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-field form-field-wide">
+            <label for="lead-notes">Message</label>
+            <textarea id="lead-notes" name="message" rows="4">Hey, just testing how Interactor handles form handoffs!</textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit">Send to Interactor</button>
+            <p id="form-demo-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <aside class="handoff-preview" aria-label="Interactor message preview">
+          <div class="preview-header">
+            <h3>Formatted message</h3>
+            <span>Preview</span>
+          </div>
+          <pre id="form-message-preview"></pre>
+        </aside>
+      </div>
     </section>
 
     <section class="docs-card" aria-labelledby="manual-title">
@@ -181,6 +234,26 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <span class="code-property">shouldOpenChat</span>: <span class="code-keyword">false</span>
 })</code></pre>
             </div>
+
+            <h4>Traditional form handoff</h4>
+            <p>Format normal form fields into one clean Interactor message.</p>
+            <div class="code-wrapper">
+              <button class="icon-copy copy-code" type="button" aria-label="Copy traditional form snippet">${copyIcon}</button>
+              <pre><code><span class="code-keyword">document</span>.querySelector(<span class="code-string">'#lead-form'</span>)?.addEventListener(<span class="code-string">'submit'</span>, (event) =&gt; {
+  event.preventDefault()
+  <span class="code-keyword">const</span> form = event.currentTarget
+  <span class="code-keyword">const</span> data = <span class="code-keyword">new</span> FormData(form)
+
+  <span class="code-keyword">const</span> message = <span class="code-string">\`New form handoff test:
+
+Name: \${data.get('name')}
+Email: \${data.get('email')}
+Request type: \${data.get('requestType')}
+Message: \${data.get('message')}\`</span>
+
+  <span class="code-keyword">window</span>.interactor.message.send(message)
+})</code></pre>
+            </div>
           </div>
         </div>
       </div>
@@ -188,6 +261,42 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </main>
 `
 
+const getFormValue = (formData: FormData, key: string) => {
+  const value = formData.get(key)
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+const formatLeadHandoffMessage = (form: HTMLFormElement) => {
+  const formData = new FormData(form)
+  const name = getFormValue(formData, 'name') || 'Not provided'
+  const email = getFormValue(formData, 'email') || 'Not provided'
+  const requestType = getFormValue(formData, 'requestType') || 'General question'
+  const message = getFormValue(formData, 'message') || 'None'
+
+  return `New form handoff test:
+
+Name: ${name}
+Email: ${email}
+Request type: ${requestType}
+Message: ${message}`
+}
+
+const updateFormMessagePreview = () => {
+  const form = document.getElementById('demo-lead-form') as HTMLFormElement | null
+  const preview = document.getElementById('form-message-preview')
+
+  if (!form || !preview) return
+
+  preview.textContent = formatLeadHandoffMessage(form)
+}
+
+const showFormStatus = (message: string, tone: 'success' | 'error') => {
+  const status = document.getElementById('form-demo-status')
+  if (!status) return
+
+  status.textContent = message
+  status.className = tone
+}
 const updateCodeSnippets = (id: string) => {
   document.querySelectorAll('.dynamic-id-code').forEach((element) => {
     element.textContent = id
@@ -327,6 +436,22 @@ const handleRadioChange = () => {
   initInteractor(id, type, fabStyle)
 }
 
+const handleTraditionalFormSubmit = (event: SubmitEvent) => {
+  event.preventDefault()
+
+  const form = event.currentTarget as HTMLFormElement
+  const message = formatLeadHandoffMessage(form)
+
+  if (window.interactor?.message?.send) {
+    window.interactor.message.send(message)
+    showFormStatus('Sent to Interactor', 'success')
+    return
+  }
+
+  window.interactor?.modal?.open()
+  showFormStatus('Interactor message API is not available', 'error')
+}
+
 window.addEventListener('load', () => {
   const { id, type, fabStyle, success } = getParams()
   applyTheme(localStorage.getItem('theme') === 'light' ? 'light' : 'dark')
@@ -378,5 +503,11 @@ document.getElementById('btn-open-chat')?.addEventListener('click', () => {
 document.getElementById('btn-schedule')?.addEventListener('click', () => {
   window.interactor?.message?.send('I would like to schedule a call')
 })
+
+const demoLeadForm = document.getElementById('demo-lead-form') as HTMLFormElement | null
+demoLeadForm?.addEventListener('submit', handleTraditionalFormSubmit)
+demoLeadForm?.addEventListener('input', updateFormMessagePreview)
+demoLeadForm?.addEventListener('change', updateFormMessagePreview)
+updateFormMessagePreview()
 
 bindCopyButtons()

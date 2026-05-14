@@ -121,6 +121,27 @@ window.interactor.message.send('Added product to cart', {
 })
 ```
 
+### Send a Traditional Form Into Chat
+
+Use this when the site has an existing form but the desired next step is an Interactor conversation.
+
+```ts
+document.querySelector('#lead-form')?.addEventListener('submit', (event) => {
+  event.preventDefault()
+
+  const form = event.currentTarget
+  const data = new FormData(form)
+  const message = `New form handoff test:
+
+Name: ${data.get('name')}
+Email: ${data.get('email')}
+Request type: ${data.get('requestType')}
+Message: ${data.get('message')}`
+
+  window.interactor.message.send(message)
+})
+```
+
 ## Verification Checklist
 
 1. Confirm the script and stylesheet are present once.
