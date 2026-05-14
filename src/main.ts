@@ -42,7 +42,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         </div>
         <h1 id="hero-title">Add Interactor <span class="heading-nowrap">to your site.</span></h1>
         <p class="hero-subtitle">
-          Use the agent-ready skill file, test the widget, or pass a traditional form into Interactor.
+          Use the agent-ready skill file or copy the embed snippets below to add Interactor to your site.
         </p>
       </div>
 
