@@ -1,6 +1,30 @@
+---
+name: interactor-embed
+description: Add, configure, troubleshoot, or remove the Interactor chat widget on a website or web app. Use for Interactor embed assets, browser initialization, launch buttons, website form handoffs, and page-to-chat messages. Use the Interactor management skill for creating or changing an Interactor's configuration or conversation behavior. Do not use for developing or fixing the Interactor platform itself or for unrelated website or chatbot work.
+---
+
 # Interactor Embed Skill
 
-Use this skill when you are asked to add Interactor, an Interactor chat widget, or an AI concierge to a website or web app.
+Use this skill when you are asked to add, configure, troubleshoot, or remove the
+Interactor widget on a website or web app, including its initialization, launch
+buttons, website form handoffs, and page-to-chat messages.
+
+## Interactor configuration handoff
+
+This skill owns the website integration. To create an Interactor or change its
+knowledge, conversation behavior, services, forms, or other platform
+configuration, use the installed Interactor management skill. If it is not
+available, follow the installation instructions at
+[Interactor Skill](https://interactor.ai/agents/skill).
+
+For a request that includes both configuration and embedding, use the management
+skill for the requested configuration, carry the confirmed public Interactor ID
+or alias back here, and complete the website integration and browser verification.
+If integration work reveals a need for further configuration changes, use the
+management skill for that portion while preserving the user's requested scope.
+An existing public ID or alias is sufficient for website-only work; management
+authentication is not required for embedding. Neither skill covers developing or
+fixing the Interactor platform itself.
 
 ## Outcome
 
